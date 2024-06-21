@@ -2,6 +2,7 @@ package uranai
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	m "github.com/anaregdesign/msproto/go/msp/azure/openai/chat/v1"
 	"net/http"
@@ -104,7 +105,7 @@ func TestTeller_Listen(t1 *testing.T) {
 	}
 	for _, tt := range tests {
 		t1.Run(tt.name, func(t1 *testing.T) {
-			t := &Teller{
+			t := &FortuneTeller{
 				client: tt.fields.client,
 			}
 			got, err := t.Listen(tt.args.ctx)
@@ -112,7 +113,12 @@ func TestTeller_Listen(t1 *testing.T) {
 				t1.Errorf("Listen() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			fmt.Println(got)
+			jsonBytes, err := json.Marshal(got)
+			if err != nil {
+				t1.Errorf("json.Marshal() error = %v", err)
+				return
+			}
+			fmt.Println(string(jsonBytes))
 		})
 	}
 }

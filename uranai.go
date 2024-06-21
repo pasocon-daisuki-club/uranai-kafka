@@ -37,10 +37,11 @@ const prompt = `
 	- 仕事運=CareerLuck
 	- 恋愛運=LoveLuck
 	- 健康運=HealthLuck
-* 仕事運、恋愛運、健康運を踏まえて、今日の運勢を解説してください。またその状況をラッキーアイテムもしくはラッキーサービスを使って改善するアイディアを教えてください
+* 仕事運、恋愛運、健康運のうちどれかを今日の運勢を解説し、今日起こりそうな事について簡単なエピソードを教えてください。またその状況をラッキーアイテムもしくはラッキーサービスを使って改善するアイディアを教えてください
 
 # 出力形式
 * 出力形式はJSON形式とし、それ以外は何も出力しないでください
+* 出力にはバッククオートを含めないでください。
 
 # 出力例
 {
@@ -51,7 +52,7 @@ const prompt = `
 			"lucky_item": "画鋲",
 			"lucky_color": "ターコイズブルー",
 			"lucky_service": "Microsoft EntraID",
-			"work_luck": 6,
+			"career_luck": 6,
 			"love_luck": 8,
 			"health_luck": 10,
 			"description": "自重運。誰にでもいい顔をしすぎて、恋人が呆れてしまいそう。あなただけが特別だということをわかりやすく伝えましょう。"
@@ -60,11 +61,11 @@ const prompt = `
 }
 `
 
-type Teller struct {
+type FortuneTeller struct {
 	client *Client
 }
 
-func (t *Teller) Listen(ctx context.Context) (*ResultSet, error) {
+func (t *FortuneTeller) Listen(ctx context.Context) (*ResultSet, error) {
 	request := &m.CompletionRequest{}
 	request.Messages = []*m.CompletionRequest_Message{
 		{
@@ -72,23 +73,25 @@ func (t *Teller) Listen(ctx context.Context) (*ResultSet, error) {
 			Content: prompt,
 		},
 	}
+	request.Temperature = 0.7
+
 	response, err := t.client.Get(ctx, request)
 	if err != nil {
 		return nil, err
 	}
 
 	resultString := response.Choices[0].Message.Content
-	resultSet := &ResultSet{}
-	err = json.Unmarshal([]byte(resultString), resultSet)
+	resultSet := ResultSet{}
+	err = json.Unmarshal([]byte(resultString), &resultSet)
 	if err != nil {
 		return nil, err
 	}
 
 	now := time.Now()
-	for _, result := range resultSet.Results {
-		result.CreatedAt = now
+	for i := range resultSet.Results {
+		resultSet.Results[i].CreatedAt = now
 	}
-	return resultSet, nil
+	return &resultSet, nil
 }
 
 type Client struct {
