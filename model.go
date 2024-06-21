@@ -1,6 +1,8 @@
 package uranai
 
-import "google.golang.org/genproto/googleapis/type/date"
+import (
+	"time"
+)
 
 type Result struct {
 	Rank         int32     `json:"rank"`
@@ -8,8 +10,11 @@ type Result struct {
 	LuckyItem    string    `json:"lucky_item"`
 	LuckyColor   string    `json:"lucky_color"`
 	LuckyService string    `json:"lucky_service"`
+	CareerLuck   int32     `json:"career_luck"`
+	LoveLuck     int32     `json:"love_luck"`
+	HealthLuck   int32     `json:"health_luck"`
 	Description  string    `json:"description"`
-	CreatedAt    date.Date `json:"created_at"`
+	CreatedAt    time.Time `json:"created_at"`
 }
 
 type ResultSet struct {
