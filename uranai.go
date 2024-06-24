@@ -64,7 +64,6 @@ const prompt = `
 type FortuneTeller struct {
 	client      *Client
 	temperature float32
-	maxRetry    int
 }
 
 func (t *FortuneTeller) Listen(ctx context.Context) (*ResultSet, error) {
