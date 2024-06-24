@@ -62,7 +62,9 @@ const prompt = `
 `
 
 type FortuneTeller struct {
-	client *Client
+	client      *Client
+	temperature float32
+	maxRetry    int
 }
 
 func (t *FortuneTeller) Listen(ctx context.Context) (*ResultSet, error) {
@@ -73,7 +75,7 @@ func (t *FortuneTeller) Listen(ctx context.Context) (*ResultSet, error) {
 			Content: prompt,
 		},
 	}
-	request.Temperature = 0.7
+	request.Temperature = t.temperature
 
 	response, err := t.client.Get(ctx, request)
 	if err != nil {
