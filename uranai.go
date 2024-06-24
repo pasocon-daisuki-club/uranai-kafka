@@ -66,6 +66,13 @@ type FortuneTeller struct {
 	temperature float32
 }
 
+func NewFortuneTeller(client *Client, temperature float32) *FortuneTeller {
+	return &FortuneTeller{
+		client:      client,
+		temperature: temperature,
+	}
+}
+
 func (t *FortuneTeller) Listen(ctx context.Context) (*ResultSet, error) {
 	request := &m.CompletionRequest{}
 	request.Messages = []*m.CompletionRequest_Message{
@@ -101,6 +108,16 @@ type Client struct {
 	deploymentName string
 	apiVersion     string
 	accessToken    string
+}
+
+func NewClient(httpClient *http.Client, resourceName, deploymentName, apiVersion, accessToken string) *Client {
+	return &Client{
+		httpClient:     httpClient,
+		resourceName:   resourceName,
+		deploymentName: deploymentName,
+		apiVersion:     apiVersion,
+		accessToken:    accessToken,
+	}
 }
 
 func (c *Client) endpoint() string {

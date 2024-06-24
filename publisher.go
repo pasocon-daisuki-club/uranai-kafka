@@ -11,6 +11,10 @@ type Publisher struct {
 	partition *kafka.TopicPartition
 }
 
+func NewPublisher(c *kafka.Producer, partition *kafka.TopicPartition) *Publisher {
+	return &Publisher{c: c, partition: partition}
+}
+
 func (p *Publisher) Publish(ctx context.Context, resultSet *ResultSet) error {
 
 	for _, result := range resultSet.Results {
