@@ -1,11 +1,13 @@
-FROM amd64/golang:1.22.4-alpine3.20 as builder
+FROM golang:1.22.4-alpine3.20 as builder
 ADD . /opt/src
 RUN apk add git build-base
 ENV CGO_ENABLED=1
+ENV GOOS=linux
+ENV GOARCH=amd64
 RUN cd /opt/src && go build -o /opt/bin/fortune_teller
 
 
-FROM amd64/alpine:3.20
+FROM alpine:3.20
 ENV KAFKA_EVENTHUB_ENDPOINT="kafka:9092"
 ENV KAFKA_EVENTHUB_CONNECTION_STRING="kafka:9092"
 ENV KAFKA_EVENTHUB_TOPIC_NAME="test"
