@@ -32,6 +32,7 @@ func main() {
 		"sasl.username":     "$ConnectionString",
 		"sasl.password":     connString,
 	})
+	defer producer.Close()
 	if err != nil {
 		panic(err)
 	}

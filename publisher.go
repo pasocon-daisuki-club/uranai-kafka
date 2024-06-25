@@ -33,5 +33,6 @@ func (p *Publisher) Publish(ctx context.Context, resultSet *ResultSet) error {
 			return err
 		}
 	}
+	p.c.Flush(15 * 1000)
 	return nil
 }
