@@ -2,6 +2,8 @@ FROM golang:1.22.4-alpine3.20 as builder
 ADD . /opt/src
 RUN apk add git build-base librdkafka-dev pkgconf
 ENV CGO_ENABLED=1
+ENV GOOS=linux
+ENV GOARCH=amd64
 RUN cd /opt/src && go build -tags musl -o /opt/bin/app
 
 
