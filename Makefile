@@ -1,12 +1,12 @@
-IMAGE_NAME = "fortune-teller:local"
+IMAGE_NAME = "uranai-kafka:local"
 
-build: Dockerfile
-	docker build --platform linux/arm64 -t $(IMAGE_NAME) .
+build: Dockerfile .dockerignore
+	docker build -t $(IMAGE_NAME) .
 
-run-aci: build
+run: build
 	# already retired just for example
-	docker context use uranai-kafka-app
 	docker run \
+	-it \
 	-e KAFKA_EVENTHUB_ENDPOINT=uranai-kafka-namespace.servicebus.windows.net:9093 \
 	-e KAFKA_EVENTHUB_CONNECTION_STRING=$(KAFKA_EVENTHUB_CONNECTION_STRING) \
 	-e KAFKA_EVENTHUB_TOPIC_NAME=uranai-kafka \
@@ -14,5 +14,5 @@ run-aci: build
 	-e AOAI_DEPLOYMENT_NAME=gpt-4o \
 	-e AOAI_API_VERSION=2024-02-01 \
 	-e AOAI_API_KEY=$(AOAI_API_KEY) \
-	ghcr.io/piroyoung/uranai-kafka:v0.0.5
+	uranai-kafka:local
 
