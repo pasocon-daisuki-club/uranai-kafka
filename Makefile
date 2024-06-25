@@ -14,5 +14,6 @@ run: build
 	-e AOAI_DEPLOYMENT_NAME=gpt-4o \
 	-e AOAI_API_VERSION=2024-02-01 \
 	-e AOAI_API_KEY=$(AOAI_API_KEY) \
+	-e AOAI_TEMPERATURE=0.7 \
 	uranai-kafka:local
 
