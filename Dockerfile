@@ -17,5 +17,5 @@ ENV AOAI_API_VERSION="v1"
 ENV AOAI_API_KEY="test"
 
 COPY --from=builder /opt/bin/app /opt/bin/app
-RUN chmod +x /opt/bin/fortune_teller
+RUN chmod +x /opt/bin/app
 CMD ["/opt/bin/app"]
