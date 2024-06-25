@@ -15,6 +15,7 @@ ENV AOAI_RESOURCE_NAME="test"
 ENV AOAI_DEPLOYMENT_NAME="test"
 ENV AOAI_API_VERSION="v1"
 ENV AOAI_API_KEY="test"
+ENV AOAI_TEMPERATURE="0.7"
 
 COPY --from=builder /opt/bin/app /opt/bin/app
 RUN chmod +x /opt/bin/app
