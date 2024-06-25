@@ -4,7 +4,7 @@ RUN apk add git build-base
 ENV CGO_ENABLED=1
 ENV GOOS=linux
 ENV GOARCH=amd64
-RUN cd /opt/src && go build -o /opt/bin/fortune_teller
+RUN cd /opt/src && go build -o /opt/bin/app
 
 
 FROM alpine:3.20
@@ -16,6 +16,6 @@ ENV AOAI_DEPLOYMENT_NAME="test"
 ENV AOAI_API_VERSION="v1"
 ENV AOAI_API_KEY="test"
 
-COPY --from=builder /opt/bin/fortune_teller /opt/bin/fortune_teller
+COPY --from=builder /opt/bin/app /opt/bin/app
 RUN chmod +x /opt/bin/fortune_teller
 CMD ["/opt/bin/fortune_teller"]
