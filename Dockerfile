@@ -1,6 +1,7 @@
 FROM golang:1.22.4-bookworm as builder
 ADD . /opt/src
-RUN apt install -y git
+RUN apt update
+RUN apt install -y git build-essential librdkafka-dev
 ENV CGO_ENABLED=1
 RUN cd /opt/src && go build -o /opt/bin/app
 
