@@ -1,13 +1,11 @@
-FROM golang:1.22.4-alpine3.20 as builder
+FROM golang:1.22.4-bookworm as builder
 ADD . /opt/src
-RUN apk add git build-base librdkafka-dev pkgconf
+RUN apt install -y git
 ENV CGO_ENABLED=1
-ENV GOOS=linux
-ENV GOARCH=amd64
-RUN cd /opt/src && go build -tags musl -o /opt/bin/app
+RUN cd /opt/src && go build -o /opt/bin/app
 
 
-FROM alpine:3.20
+FROM debian:bookworm
 ENV KAFKA_EVENTHUB_ENDPOINT="kafka:9093"
 ENV KAFKA_EVENTHUB_CONNECTION_STRING="conn-str"
 ENV KAFKA_EVENTHUB_TOPIC_NAME="test"
