@@ -144,10 +144,10 @@ func (c *Client) Get(ctx context.Context, request *m.CompletionRequest) (*m.Comp
 	httpRequest.Header = c.header()
 
 	httpResponse, err := c.httpClient.Do(httpRequest)
-	defer httpResponse.Body.Close()
 	if err != nil {
 		return nil, err
 	}
+	defer httpResponse.Body.Close()
 
 	responseBody, err := io.ReadAll(httpResponse.Body)
 	if err != nil {
