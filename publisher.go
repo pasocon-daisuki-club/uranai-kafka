@@ -2,10 +2,12 @@ package uranai
 
 import (
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"github.com/IBM/sarama"
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"log"
+	"time"
 )
 
 type Publisher interface {
@@ -44,11 +46,15 @@ func (p *ConfluentPublisher) Publish(ctx context.Context, resultSet *ResultSet) 
 }
 
 type SaramaPublisher struct {
-	c sarama.SyncProducer
+	c         sarama.SyncProducer
+	topicName string
 }
 
-func NewSaramaPublisher(c sarama.SyncProducer) *SaramaPublisher {
-	return &SaramaPublisher{c: c}
+func NewSaramaPublisher(c sarama.SyncProducer, topicName string) *SaramaPublisher {
+	return &SaramaPublisher{
+		c:         c,
+		topicName: topicName,
+	}
 }
 
 func (s SaramaPublisher) Publish(ctx context.Context, resultSet *ResultSet) error {
@@ -58,9 +64,10 @@ func (s SaramaPublisher) Publish(ctx context.Context, resultSet *ResultSet) erro
 		if err != nil {
 			return err
 		}
+
 		// Publish to Kafka
 		message := &sarama.ProducerMessage{
-			Topic: "test", //FIXME: Hardcoded topic
+			Topic: s.topicName,
 			Value: sarama.StringEncoder(jsonBytes),
 		}
 		partition, offset, err := s.c.SendMessage(message)
@@ -71,4 +78,21 @@ func (s SaramaPublisher) Publish(ctx context.Context, resultSet *ResultSet) erro
 		}
 	}
 	return nil
+}
+
+func NewEventHubSaramaConfig(connString string) *sarama.Config {
+	config := sarama.NewConfig()
+	config.Net.DialTimeout = 10 * time.Second
+	config.Net.SASL.Enable = true
+	config.Net.SASL.User = "$ConnectionString"
+	config.Net.SASL.Password = connString
+	config.Net.SASL.Mechanism = "PLAIN"
+
+	config.Net.TLS.Enable = true
+	config.Net.TLS.Config = &tls.Config{
+		InsecureSkipVerify: true,
+		ClientAuth:         0,
+	}
+	config.Producer.Return.Successes = true
+	return config
 }

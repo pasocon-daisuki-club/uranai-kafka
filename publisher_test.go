@@ -102,7 +102,8 @@ func TestSaramaPublisher_Publish(t *testing.T) {
 	defer producer.Close()
 
 	type fields struct {
-		c sarama.SyncProducer
+		c         sarama.SyncProducer
+		topicName string
 	}
 	type args struct {
 		ctx       context.Context
@@ -117,7 +118,8 @@ func TestSaramaPublisher_Publish(t *testing.T) {
 		{
 			name: "valid case",
 			fields: fields{
-				c: producer,
+				c:         producer,
+				topicName: "test",
 			},
 			args: args{
 				ctx: context.Background(),
@@ -142,7 +144,8 @@ func TestSaramaPublisher_Publish(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := SaramaPublisher{
-				c: tt.fields.c,
+				c:         tt.fields.c,
+				topicName: tt.fields.topicName,
 			}
 			if err := s.Publish(tt.args.ctx, tt.args.resultSet); (err != nil) != tt.wantErr {
 				t.Errorf("Publish() error = %v, wantErr %v", err, tt.wantErr)
