@@ -65,7 +65,7 @@ func TestPublisher_Publish(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := &Publisher{
+			p := &ConfluentPublisher{
 				c:         tt.fields.c,
 				partition: tt.fields.partition,
 			}
