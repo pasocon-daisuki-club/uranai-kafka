@@ -47,6 +47,10 @@ type SaramaPublisher struct {
 	c sarama.SyncProducer
 }
 
+func NewSaramaPublisher(c sarama.SyncProducer) *SaramaPublisher {
+	return &SaramaPublisher{c: c}
+}
+
 func (s SaramaPublisher) Publish(ctx context.Context, resultSet *ResultSet) error {
 	for _, result := range resultSet.Results {
 		// Convert result to JSON
@@ -56,7 +60,7 @@ func (s SaramaPublisher) Publish(ctx context.Context, resultSet *ResultSet) erro
 		}
 		// Publish to Kafka
 		message := &sarama.ProducerMessage{
-			Topic: "uranai-kafka", //FIXME: Hardcoded topic
+			Topic: "test", //FIXME: Hardcoded topic
 			Value: sarama.StringEncoder(jsonBytes),
 		}
 		partition, offset, err := s.c.SendMessage(message)
