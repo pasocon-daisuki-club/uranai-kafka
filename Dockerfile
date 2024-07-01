@@ -2,7 +2,7 @@ FROM golang:1.22.4-alpine3.20 as builder
 ADD . /opt/src
 RUN apk update && apk add git build-base
 ENV CGO_ENABLED=1
-RUN cd /opt/src && go build -o /opt/bin/app
+RUN cd /opt/src && go build -o /opt/bin/app ./app/sarama
 
 
 FROM alpine:3.20
