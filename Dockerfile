@@ -1,12 +1,11 @@
-FROM golang:1.22.4-bookworm as builder
+FROM golang:1.22.4-alpine3.20 as builder
 ADD . /opt/src
-RUN apt update
-RUN apt install -y git build-essential librdkafka-dev
+RUN apk update && apk add git build-base
 ENV CGO_ENABLED=1
 RUN cd /opt/src && go build -o /opt/bin/app
 
 
-FROM debian:bookworm
+FROM alpine:3.20
 ENV KAFKA_EVENTHUB_ENDPOINT="kafka:9093"
 ENV KAFKA_EVENTHUB_CONNECTION_STRING="conn-str"
 ENV KAFKA_EVENTHUB_TOPIC_NAME="test"
