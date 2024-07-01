@@ -38,7 +38,7 @@ func main() {
 	}
 
 	partition := kafka.TopicPartition{Topic: &topicName, Partition: kafka.PartitionAny}
-	publisher := uranai.NewPublisher(producer, &partition)
+	publisher := uranai.NewConfluentPublisher(producer, &partition)
 
 	httpClient := &http.Client{}
 	client := uranai.NewClient(httpClient, resourceName, deploymentName, apiVersion, accessToken)
