@@ -4,10 +4,10 @@ import "context"
 
 type Batch struct {
 	t *FortuneTeller
-	p *Publisher
+	p Publisher
 }
 
-func NewBatch(t *FortuneTeller, p *Publisher) *Batch {
+func NewBatch(t *FortuneTeller, p Publisher) *Batch {
 	return &Batch{t: t, p: p}
 }
 

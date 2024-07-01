@@ -6,16 +6,20 @@ import (
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 )
 
-type Publisher struct {
+type Publisher interface {
+	Publish(ctx context.Context, resultSet *ResultSet) error
+}
+
+type ConfluentPublisher struct {
 	c         *kafka.Producer
 	partition *kafka.TopicPartition
 }
 
-func NewPublisher(c *kafka.Producer, partition *kafka.TopicPartition) *Publisher {
-	return &Publisher{c: c, partition: partition}
+func NewConfluentPublisher(c *kafka.Producer, partition *kafka.TopicPartition) *ConfluentPublisher {
+	return &ConfluentPublisher{c: c, partition: partition}
 }
 
-func (p *Publisher) Publish(ctx context.Context, resultSet *ResultSet) error {
+func (p *ConfluentPublisher) Publish(ctx context.Context, resultSet *ResultSet) error {
 
 	for _, result := range resultSet.Results {
 		// Convert result to JSON
