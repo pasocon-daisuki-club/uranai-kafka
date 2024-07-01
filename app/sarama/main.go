@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/IBM/sarama"
 	"github.com/piroyoung/uranai-kafka"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -22,12 +23,12 @@ func main() {
 	accessToken := os.Getenv("AOAI_API_KEY")
 	temperature, err := strconv.ParseFloat(os.Getenv("AOAI_TEMPERATURE"), 32)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	config := uranai.NewEventHubSaramaConfig(connString)
 	producer, err := sarama.NewSyncProducer([]string{hostName}, config)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	defer producer.Close()
 	publisher := uranai.NewSaramaPublisher(producer, topicName)
@@ -41,6 +42,6 @@ func main() {
 
 	err = batch.Run(ctx)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 }

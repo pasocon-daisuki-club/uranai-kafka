@@ -74,7 +74,7 @@ func (s SaramaPublisher) Publish(ctx context.Context, resultSet *ResultSet) erro
 		if err != nil {
 			return err
 		} else {
-			log.Printf("> message sent to partition %d at offset %d\n", partition, offset)
+			log.Printf("> message sent to partition %d at offset %d:\n %s", partition, offset, string(jsonBytes))
 		}
 	}
 	return nil
